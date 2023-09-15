@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "applicationId": "kr.co.klnet.aos.etransdriving",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "BUNDLE"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": -1,
+        "fullName": "",
+        "baseName": "",
+        "dirName": ""
+      },
+      "path": "../../../../../../releaseApp/release/app-release.aab",
+      "properties": {}
+    }
+  ]
+}

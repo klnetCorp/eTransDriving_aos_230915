@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:id="@+id/toast_layout_root">
+
+	<TextView
+		android:id="@+id/text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="16dp"
+		android:textSize="16dp"
+		android:textColor="#ffffff"
+		android:background="@drawable/toast"/>
+
+	// 여기서 android:background(배경) 지정 안하면, 투명배경에 검정글씨(기존 TextView 디폴트 background)
+
+</LinearLayout>

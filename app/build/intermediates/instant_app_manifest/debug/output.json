@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "kr.co.klnet.aos.etransdriving",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "INSTANT_APP_MANIFEST"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 62,
+        "versionName": "1.90",
+        "outputFile": "app-debug.apk",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {
+        "packageId": "kr.co.klnet.aos.etransdriving",
+        "split": "",
+        "minSdkVersion": "23"
+      }
+    }
+  ]
+}

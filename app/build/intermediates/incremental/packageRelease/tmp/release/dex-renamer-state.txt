@@ -1,0 +1,4 @@
+#Wed May 03 09:14:08 KST 2023
+base.0=/Users/ebiz/Desktop/workspace/이트랜스 드라이빙/이트랜스드라이빙_AOS/eTransDrivingAOS.230420/app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
