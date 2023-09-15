@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- 운영
--->
-<!DOCTYPE resources [
+<!-- 운영[
     <!ENTITY conServer "www.etruckbank.co.kr">
     <!ENTITY conServer8 "etdriving.klnet.co.kr">
 ]>
+-->
+<!DOCTYPE resources
 
-<!--
+    <!--
+-->
 <!DOCTYPE resources [
     <!ENTITY conServer "smartest.klnet.co.kr">
     <!ENTITY conServer8 "devetdriving.klnet.co.kr">
 ]>
--->
 
 
 

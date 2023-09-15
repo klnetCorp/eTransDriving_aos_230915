@@ -81,16 +81,16 @@
 
 
 <!-- LBS 운영 서버 포트 (etruckbank/etdriving.klnet.co.kr)
--->
     <string name="strLBSEnginePort">14200</string>
+-->
 
 <!-- LBS 테스트 서버 포트 (smartest/devetdriving.klnet.co.kr) -->
     <!--기존 smart-->
     <!--<string name="strLBSEnginePort">14300</string>-->
     <!--변경(smart to mfedi change)-->
 <!--
-    <string name="strLBSEnginePort">14666</string>
 -->
+    <string name="strLBSEnginePort">14666</string>
 
     <string name="lbs_service_name">eTransDrivingTraceService</string>
 </resources>
