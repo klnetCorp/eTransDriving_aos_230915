@@ -33,11 +33,11 @@ public class DataSet {
 
 	//cross-app fix : add final
 
-	public final static String push_url = "https://testpush.plism.com";  //개발계 push
-	public final static String connect_url = "https://devetdriving.klnet.co.kr"; //개발계
+//	public final static String push_url = "https://testpush.plism.com";  //개발계 push
+//	public final static String connect_url = "https://devetdriving.klnet.co.kr"; //개발계
 
-//	public final static String push_url = "https://push.plism.com"; //운영계 push
-//	public final static String connect_url = "https://etdriving.klnet.co.kr"; //운영
+	public final static String push_url = "https://push.plism.com"; //운영계 push
+	public final static String connect_url = "https://etdriving.klnet.co.kr"; //운영
 
 	//eTransDriving service
 	//public static String login_path = "/etdriving/login.jsp";
