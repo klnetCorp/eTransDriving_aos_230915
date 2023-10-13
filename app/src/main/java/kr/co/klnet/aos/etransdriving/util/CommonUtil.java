@@ -13,9 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.api.client.util.Base64;
 import com.itextpdf.text.Document;
@@ -31,11 +28,17 @@ import com.kakao.kakaonavi.Location;
 import com.kakao.kakaonavi.NaviOptions;
 import com.kakao.kakaonavi.options.CoordType;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -43,9 +46,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kr.co.klnet.aos.etransdriving.EtransDrivingApp;
-import kr.co.klnet.aos.etransdriving.MainActivity;
 import kr.co.klnet.aos.etransdriving.R;
 import kr.co.klnet.aos.etransdriving.WebViewContainer;
 
@@ -68,54 +72,54 @@ public class CommonUtil {
 
         //checkApiKey(apiKey);
 
-         if(tmapAuthCompleted) {
-             boolean tmapInstalled = tMapTapi.isTmapApplicationInstalled();
-             if (tmapInstalled == false) {
-                 Log.i("TMAP", "TMAP is need to installation");
-                 ArrayList<String> _ar = tMapTapi.getTMapDownUrl();
-                 Log.d("test", "" + _ar);
-                 if (_ar != null && _ar.size() > 0) {
-                     Log.d("_ar.size() : ", "" + _ar.size());
-                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(_ar.get(0)));
-                     _activity.startActivity(intent);
-                 }
-             } else {
-                 Log.i("TMAP", "TMAP is already installed");
-                 boolean result = tMapTapi.invokeRoute(goalNm, fX, fY);
-                 Log.i("TMAP", "invoke route, result=" + (result ? "success" : "failed"));
-             }
+        if(tmapAuthCompleted) {
+            boolean tmapInstalled = tMapTapi.isTmapApplicationInstalled();
+            if (tmapInstalled == false) {
+                Log.i("TMAP", "TMAP is need to installation");
+                ArrayList<String> _ar = tMapTapi.getTMapDownUrl();
+                Log.d("test", "" + _ar);
+                if (_ar != null && _ar.size() > 0) {
+                    Log.d("_ar.size() : ", "" + _ar.size());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(_ar.get(0)));
+                    _activity.startActivity(intent);
+                }
+            } else {
+                Log.i("TMAP", "TMAP is already installed");
+                boolean result = tMapTapi.invokeRoute(goalNm, fX, fY);
+                Log.i("TMAP", "invoke route, result=" + (result ? "success" : "failed"));
+            }
 
-         } else {
-             tMapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
-                 @Override
-                 public void SKTMapApikeySucceed() {
-                     tmapAuthCompleted = true;
+        } else {
+            tMapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+                @Override
+                public void SKTMapApikeySucceed() {
+                    tmapAuthCompleted = true;
 
-                     boolean tmapInstalled = tMapTapi.isTmapApplicationInstalled();
-                     if (tmapInstalled == false) {
-                         Log.i("TMAP", "TMAP is need to installation");
-                         ArrayList<String> _ar = tMapTapi.getTMapDownUrl();
-                         Log.d("test", "" + _ar);
-                         if (_ar != null && _ar.size() > 0) {
-                             Log.d("_ar.size() : ", "" + _ar.size());
-                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(_ar.get(0)));
-                             _activity.startActivity(intent);
-                         }
-                     } else {
-                         Log.i("TMAP", "TMAP is already installed");
-                         boolean result = tMapTapi.invokeRoute(goalNm, fX, fY);
-                         Log.i("TMAP", "invoke route, result=" + (result ? "success" : "failed"));
-                     }
-                 }
+                    boolean tmapInstalled = tMapTapi.isTmapApplicationInstalled();
+                    if (tmapInstalled == false) {
+                        Log.i("TMAP", "TMAP is need to installation");
+                        ArrayList<String> _ar = tMapTapi.getTMapDownUrl();
+                        Log.d("test", "" + _ar);
+                        if (_ar != null && _ar.size() > 0) {
+                            Log.d("_ar.size() : ", "" + _ar.size());
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(_ar.get(0)));
+                            _activity.startActivity(intent);
+                        }
+                    } else {
+                        Log.i("TMAP", "TMAP is already installed");
+                        boolean result = tMapTapi.invokeRoute(goalNm, fX, fY);
+                        Log.i("TMAP", "invoke route, result=" + (result ? "success" : "failed"));
+                    }
+                }
 
-                 @Override
-                 public void SKTMapApikeyFailed(String errorMsg) {
-                     tmapAuthCompleted = false;
-                     Log.e("sl", errorMsg);
-                 }
-             });
-             tMapTapi.setSKTMapAuthentication(apiKey);
-         }
+                @Override
+                public void SKTMapApikeyFailed(String errorMsg) {
+                    tmapAuthCompleted = false;
+                    Log.e("sl", errorMsg);
+                }
+            });
+            tMapTapi.setSKTMapAuthentication(apiKey);
+        }
 
     }
 
@@ -400,6 +404,80 @@ public class CommonUtil {
 
     public static void setOnWisutakView(Context context, final HashMap<String, String> _hashMap) {
 
+    }
+
+    public static void getPeriod() {
+
+        TimerTask myTask = new TimerTask() {
+            public void run() {
+                if (EtransDrivingApp.getInstance().getPeriodOnOff().equals("Off")) return ;
+
+                String resultCode = "";
+                String errorMsg = "";
+
+                String url = DataSet.connect_url + DataSet.gps_period_url + EtransDrivingApp.getInstance().getMobileNo();
+                String response = null;
+                try {
+                    Log.d("CHECK", url);
+                    URL urlCls = new URL(url);
+                    // 연결 객체 생성
+                    HttpURLConnection conn = (HttpURLConnection)urlCls.openConnection();
+
+                    // 결과값 저장 문자열
+                    final StringBuilder sb = new StringBuilder();
+                    // 연결되면
+                    if(conn != null) {
+                        // 응답 타임아웃 설정
+                        conn.setConnectTimeout(10000);
+                        // POST 요청방식
+                        conn.setRequestMethod("GET");
+                        // url에 접속 성공하면 (200)
+                        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            // 결과 값 읽어오는 부분
+                            BufferedReader br = new BufferedReader(new InputStreamReader(
+                                    conn.getInputStream(), "utf-8"
+                            ));
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                sb.append(line);
+                            }
+                            // 버퍼리더 종료
+                            br.close();
+                            Log.i("tag", "결과 문자열 :" +sb.toString());
+                            // 응답 Json 타입일 경우
+                            //JSONArray jsonResponse = new JSONArray(sb.toString());
+                            //Log.i("tag", "확인 jsonArray : " + jsonResponse);
+
+                            JSONObject json = new JSONObject(sb.toString());
+                            String status = json.getString("status");
+                            String collectTerm = json.getString("collectTerm");
+                            String sendTerm = json.getString("sendTerm");
+
+                            if (status != null && status.equals("SUCCESS")) {
+                                if (collectTerm != null && collectTerm.length() > 0) {
+                                    Log.i("CHECK", "set collectTerm by URL CommonUtil.getPeriod(): "+collectTerm);
+                                    EtransDrivingApp.getInstance().setCreationPeroid(collectTerm); //수집주기
+                                }
+                                if (sendTerm != null && sendTerm.length() > 0) {
+                                    Log.i("CHECK", "set sendTerm by URL CommonUtil.getPeriod(): "+sendTerm);
+                                    EtransDrivingApp.getInstance().setReportPeroid(sendTerm); //보고주기
+                                }
+                            } else {
+                                Log.i("CHECK", "getPeriod() FAIL");
+                            }
+
+                        }
+                        // 연결 끊기
+                        conn.disconnect();
+                    }
+                } catch (Exception e) {
+                    Log.e("CHECK", "", e);
+                }
+
+            }
+        };
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(myTask, 5000, 10000);
     }
 
 //

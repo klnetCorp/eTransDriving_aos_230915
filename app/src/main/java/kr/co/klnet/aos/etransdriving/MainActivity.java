@@ -124,6 +124,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -463,7 +464,6 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter completeFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         registerReceiver(completeReceiver, completeFilter);
 
-
 //        //백그라운드상태에서 수신된 푸시가 처리되었는지 확인
 //        if (DataSet.getInstance().isrunapppush) {
 //            processPushNoti();
@@ -744,6 +744,9 @@ public class MainActivity extends AppCompatActivity {
 
         SignGATE.addProvider();
         KICAProvider.addProvider();
+
+        EtransDrivingApp.getInstance().setPeriodOn();
+        CommonUtil.getPeriod();
 
         sendEventFC(TAG, "onCreate Done");
     }
@@ -1205,7 +1208,7 @@ public class MainActivity extends AppCompatActivity {
                     int isbackgroundPermission = ContextCompat.checkSelfPermission(mContext,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION);
                     if (isbackgroundPermission != PackageManager.PERMISSION_GRANTED) {
-                         backgroundPermission();
+                        backgroundPermission();
                     } else {
                         testLoadParam(); //send log to firebase
                         if (checkOverlayWindowService()) {
@@ -1503,7 +1506,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (requestType) {
                 case SEAL_NO_FROM_CAMERA_REQUEST:
-            sealNoToServer(originalUri, requestType);
+                    sealNoToServer(originalUri, requestType);
                     break;
                 case UPLOADFILE_FROM_CAMERA_REQUEST:
                     photoToServer(originalUri, requestType);
@@ -2215,6 +2218,12 @@ public class MainActivity extends AppCompatActivity {
                     } else if (method.equalsIgnoreCase("getUploadFile")) {
                         //업로드파일선택
                         chooseUploadSource();
+                    } else if (method.equalsIgnoreCase("setPeriodOn")) {
+                        //보고주기 가져오기 사용
+                        EtransDrivingApp.getInstance().setPeriodOn();
+                    } else if (method.equalsIgnoreCase("setPeriodOff")) {
+                        //보고주기 가져오기 중지
+                        EtransDrivingApp.getInstance().setPeriodOff();
                     }
                 }
 
@@ -4011,11 +4020,13 @@ public class MainActivity extends AppCompatActivity {
         //요청이면...2018.11.09
         if(startYN.equals("R") || startYN.equals("N"))  {
             //출발취소 시 GPS 체크 안하기
+            DataSet.getInstance().isToHanjin = "false";
             return true;
         }
 
         //한진경우
         if(tmrCd.equals("HJNPC")) {
+            DataSet.getInstance().isToHanjin = "true";
             try {
                 MinewBeaconManager mMinewBeaconManager = MinewBeaconManager.getInstance(this);
 
@@ -6305,7 +6316,7 @@ public class MainActivity extends AppCompatActivity {
     private void photoToServer(Uri originalUri, int requestType) {
         try {
             InputStream in = getContentResolver().openInputStream(originalUri);
-            
+
             Bitmap img = BitmapFactory.decodeStream(in);
 
             img = PhotoFragment.resizeBitmap(img, 1080, 1920);
@@ -6459,7 +6470,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
             byte[] bytes = byteOutStream.toByteArray();
 
             String base64String = Base64.encodeToString(bytes, Base64.NO_WRAP);

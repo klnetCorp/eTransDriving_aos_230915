@@ -1,15 +1,5 @@
 package kr.co.klnet.aos.etransdriving.util;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.util.Log;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-
-import java.util.UUID;
-
 public class DataSet {
 	public String isrunning = "false";
 	public String islogin = "false";
@@ -52,6 +42,12 @@ public class DataSet {
 	public static String relay_server_url_import = "https://www.signgate.com/web-relay/cert/cert_dn.sg";
 	public static String relay_server_url_import_ok = "https://www.signgate.com/web-relay/cert/confirm.sg";
 
+	//관제 주기 조회 서버 url
+	public static String gps_period_url = "/etdriving/selectDriverInfo.do?method=selectDriverInfo&mobileNo=";
+
+	public String isToHanjin = "false";
+	public String useGpsPeriodYn = "true";
+
 	private static DataSet _instance;
 
 //	public static CookieSyncManager syncManager;
@@ -62,7 +58,7 @@ public class DataSet {
 	}
 
 	private DataSet() {
-		
+
 	}
 
 	public static DataSet getInstance() {

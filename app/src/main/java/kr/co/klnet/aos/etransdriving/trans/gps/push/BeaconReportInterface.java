@@ -22,6 +22,7 @@ import kr.co.klnet.aos.etransdriving.BuildConfig;
 import kr.co.klnet.aos.etransdriving.EtransDrivingApp;
 import kr.co.klnet.aos.etransdriving.json.MOB_Json;
 import kr.co.klnet.aos.etransdriving.util.CommonUtil;
+import kr.co.klnet.aos.etransdriving.util.DataSet;
 import kr.co.klnet.aos.etransdriving.util.UserRssi;
 
 public class BeaconReportInterface extends Activity
@@ -110,13 +111,17 @@ public class BeaconReportInterface extends Activity
 			mMinewBeaconManager = MinewBeaconManager.getInstance(mContext);
 		}
 
-        //비콘리스트..2018.11.06 12대
+		//비콘리스트..2018.11.06 12대
 		String[] strBeaconList = {"C2:00:73:00:00:91","C2:00:73:00:00:92","C2:00:73:00:00:76"
-				                 ,"C2:00:73:00:01:07","C2:00:73:00:00:74","C2:00:73:00:00:73"
-				                 ,"C2:00:73:00:00:96","C2:00:73:00:01:05","C2:00:73:00:01:08"
-				                 ,"C2:00:73:00:00:95","C2:00:73:00:01:04","C2:00:73:00:01:06"
-							 	 ,"C2:00:73:00:00:9B","C2:00:73:00:01:FF","C2:00:73:00:01:00"
-								 ,"C2:00:73:00:00:97","C2:00:73:00:01:9C","C2:00:73:00:01:98"};
+				,"C2:00:73:00:01:07","C2:00:73:00:00:74","C2:00:73:00:00:73"
+				,"C2:00:73:00:00:96","C2:00:73:00:01:05","C2:00:73:00:01:08"
+				,"C2:00:73:00:00:95","C2:00:73:00:01:04","C2:00:73:00:01:06"
+				,"C2:00:73:00:00:9B","C2:00:73:00:01:FF","C2:00:73:00:01:00"
+				,"C2:00:73:00:00:97","C2:00:73:00:01:9C","C2:00:73:00:01:98"};
+
+		if (DataSet.getInstance().isToHanjin.equals("false")) {
+			bStart = false;
+		}
 
 		try {
 
@@ -226,17 +231,17 @@ public class BeaconReportInterface extends Activity
 //								Log.w(TAG, "========onAppearBeacons======1=====: " + beaConParamMap.get("TGT_MAC"));
 								for (MinewBeacon minewBeacon : minewBeacons) {
 
-									 deviceMac = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_MAC).getStringValue();
-									 deviceName = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Name).getStringValue();
-									 //deviceUUID = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_UUID).getStringValue();
+									deviceMac = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_MAC).getStringValue();
+									deviceName = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Name).getStringValue();
+									//deviceUUID = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_UUID).getStringValue();
 
-									 //deviceBattery = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_BatteryLevel).getStringValue();
-									 //int batt = Integer.parseInt(deviceBattery);
+									//deviceBattery = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_BatteryLevel).getStringValue();
+									//int batt = Integer.parseInt(deviceBattery);
 
-									  //deviceMajor = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Major).getStringValue();
-									 // deviceMinor = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Minor).getStringValue();
-									 //String deviceRssi = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_RSSI).getStringValue();
-									 //boolean deviceInrage = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_InRage).isBool();
+									//deviceMajor = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Major).getStringValue();
+									// deviceMinor = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Minor).getStringValue();
+									//String deviceRssi = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_RSSI).getStringValue();
+									//boolean deviceInrage = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_InRage).isBool();
 
 //									Log.d(TAG, "========onAppearBeacons======, mac=" + deviceMac + ", name=" + deviceName);
 
@@ -333,6 +338,7 @@ public class BeaconReportInterface extends Activity
 			if(mMinewBeaconManager != null) {
 				try {
 					mMinewBeaconManager.stopScan();
+					Log.d(TAG, "========mMinewBeaconManager stopScan())=====44======: ");
 				} catch (Exception e) {
 					//전송카운터 초기화
 					mBeaconMacCountCnt = 0;

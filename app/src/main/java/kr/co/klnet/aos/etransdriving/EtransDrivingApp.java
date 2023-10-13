@@ -828,6 +828,38 @@ public class EtransDrivingApp extends Application {
         return beaconStartYN;
     }
 
+    /**
+     * 보고주기 가져오기 사용
+     *
+     * @return
+     */
+    public void setPeriodOn() {
+        SharedPreferences.Editor editor = _basicPref.edit();
+        editor.putString("getPeriodInfo", "On");
+        editor.commit();
+    }
+
+    /**
+     * 보고주기 가져오기 중지
+     *
+     * @param
+     */
+    public void setPeriodOff() {
+        SharedPreferences.Editor editor = _basicPref.edit();
+        editor.putString("getPeriodInfo", "Off");
+        editor.commit();
+    }
+
+    /**
+     * 보고주기 가져오기 상태 조회
+     *
+     * @return
+     */
+    public String getPeriodOnOff() {
+        String periodOnOff = _basicPref.getString("getPeriodInfo", "On");
+        return periodOnOff;
+    }
+
     static JsonAsync.JsonAsyncListener basicInfoAsyncListener = new JsonAsync.JsonAsyncListener() {
         @Override
         public void OnResponse(int respCode) {
